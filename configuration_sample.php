@@ -12,7 +12,7 @@ return [
     'frontend_config' => [
         'app_name' => 'FileGator',
         'app_version' => APP_VERSION,
-        'language' => 'english',
+        'language' => 'chinese',
         'logo' => 'https://filegator.io/filegator_logo.svg',
         'upload_max_size' => 100 * 1024 * 1024 * 1024, // 100GB
         'upload_chunk_size' => 1 * 1024 * 1024 * 1024, // 10MB
