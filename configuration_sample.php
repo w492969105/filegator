@@ -15,8 +15,8 @@ return [
         'language' => 'chinese',
         'logo' => 'https://filegator.io/filegator_logo.svg',
         'upload_max_size' => 100 * 1024 * 1024 * 1024, // 100GB
-        'upload_chunk_size' => 1 * 1024 * 1024 * 1024, // 10MB
-        'upload_simultaneous' => 3,
+        'upload_chunk_size' => 10 * 1024 * 1024, // 10MB
+        'upload_simultaneous' => 10,
         'default_archive_name' => 'archive.zip',
         'editable' => ['.txt', '.css', '.js', '.ts', '.html', '.php', '.json', '.md'],
         'date_format' => 'YY/MM/DD hh:mm:ss', // see: https://momentjs.com/docs/#/displaying/format/
