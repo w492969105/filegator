@@ -1,11 +1,11 @@
 <?php
 
-/*
+/* 
  * This file is part of the FileGator package.
- *
- * (c) Milos Stojanovic <alcalbg@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE file
+ * 
+ * (c) Milos Stojanovic <alcalbg@gmail.com> 
+ * 
+ * For the full copyright and license information, please view the LICENSE file 
  */
 
 namespace Filegator\Controllers;
@@ -48,10 +48,22 @@ class UploadController
         $chunk_file = 'multipart_'.$identifier.$file_name.'.part'.$chunk_number;
 
         if ($this->tmpfs->exists($chunk_file)) {
-            return $response->json('Chunk exists', 200);
+            return $response->json([
+                'message' => 'Chunk exists',
+                'file_name' => $file_name,
+                'identifier' => $identifier,
+                'chunk_number' => $chunk_number,
+                'chunk_file' => $chunk_file,
+            ], 200);
         }
 
-        return $response->json('Chunk does not exists', 204);
+        return $response->json([
+            'message' => 'Chunk does not exist',
+            'file_name' => $file_name,
+            'identifier' => $identifier,
+            'chunk_number' => $chunk_number,
+            'chunk_file' => $chunk_file,
+        ], 204);
     }
 
     public function upload(Request $request, Response $response)
@@ -78,13 +90,33 @@ class UploadController
         }
 
         if (! $file || ! $file->isValid() || $file->getSize() > $this->config->get('frontend_config.upload_max_size')) {
-            return $response->json('Bad file', 422);
+            return $response->json([
+                'message' => 'Bad file',
+                'file_name' => $file_name,
+                'destination' => $destination,
+                'chunk_number' => $chunk_number,
+                'total_chunks' => $total_chunks,
+                'total_size' => $total_size,
+                'identifier' => $identifier,
+                'file' => $file,
+                'overwrite_on_upload' => $overwrite_on_upload,
+            ], 422);
         }
 
         $prefix = 'multipart_'.$identifier;
 
         if ($this->tmpfs->exists($prefix.'_error')) {
-            return $response->json('Chunk too big', 422);
+            return $response->json([
+                'message' => 'Chunk too big',
+                'file_name' => $file_name,
+                'destination' => $'destination' => $destination,
+                'chunk_number' => $chunk_number,
+                'total_chunks' => $total_chunks,
+                'total_size' => $total_size,
+                'identifier' => $identifier,
+                'file' => $file,
+                'overwrite_on_upload' => $overwrite_on_upload,
+            ], 422);
         }
 
         $stream = fopen($file->getPathName(), 'r');
@@ -104,7 +136,18 @@ class UploadController
             }
             $this->tmpfs->write($prefix.'_error', '');
 
-            return $response->json('Chunk too big', 422);
+            return $response->json([
+                'message' => 'Chunk too big',
+                'file_name' => $file_name,
+                'destination' => $destination,
+                'chunk_number' => $chunk_number,
+                'total_chunks' => $total_chunks,
+                'total_size' => $total_size,
+                'identifier' => $identifier,
+                'file' => $file,
+                'overwrite_on_upload' => $overwrite_on_upload,
+                'chunks_size' => $chunks_size,
+            ], 422);
         }
 
         // if all the chunks are present, create final file and store it
@@ -123,9 +166,42 @@ class UploadController
                 $this->tmpfs->remove($expired_chunk['name']);
             }
 
-            return $res ? $response->json('Stored') : $response->json('Error storing file');
+            return $res ? $response->json([
+                'message' => 'Stored',
+                'file_name' => $file_name,
+                'destination' => $destination,
+                'chunk_number' => $chunk_number,
+                'total_chunks' => $total_chunks,
+                'total_size' => $total_size,
+                'identifier' => $identifier,
+                'file' => $file,
+                'overwrite_on_upload' => $overwrite_on_upload,
+                'chunks_size' => $chunks_size,
+            ]) : $response->json([
+                'message' => 'Error storing file',
+                'file_name' => $file_name,
+                'destination' => $destination,
+                'chunk_number' => $chunk_number,
+                'total_chunks' => $total_chunks,
+                'total_size' => $total_size,
+                'identifier' => $identifier,
+                'file' => $file,
+                'overwrite_on_upload' => $overwrite_on_upload,
+                'chunks_size' => $chunks_size,
+            ]);
         }
 
-        return $response->json('Uploaded');
+        return $response->json([
+            'message' => 'Uploaded',
+            'file_name' => $file_name,
+            'destination' => $destination,
+            'chunk_number' => $chunk_number,
+            'total_chunks' => $total_chunks,
+            'total_size' => $total_size,
+            'identifier' => $identifier,
+            'file' => $file,
+            'overwrite_on_upload' => $overwrite_on_upload,
+            'chunks_size' => $chunks_size,
+        ]);
     }
 }
