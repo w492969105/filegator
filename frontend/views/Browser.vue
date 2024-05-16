@@ -176,12 +176,13 @@ import Upload from './partials/Upload'
 import api from '../api/api'
 import VueClipboard from 'vue-clipboard2'
 import _ from 'lodash'
+import VideoPlayer from './partials/VideoPlayer'
 
 Vue.use(VueClipboard)
 
 export default {
   name: 'Browser',
-  components: { Menu, Pagination, Upload },
+  components: { Menu, Pagination, Upload, VideoPlayer  },
   data() {
     return {
       dropZone: false,
@@ -421,20 +422,21 @@ export default {
       })
     },
     preview(item) {
-      let modal = null
-      if (this.isImage(item.path)) {
-        modal = Gallery
-      }
-      if (this.isText(item.path)) {
-        modal = Editor
-      }
-      this.$modal.open({
-        parent: this,
-        props: { item: item },
-        hasModalCard: true,
-        component: modal,
-      })
-    },
+    let modal = null
+    if (this.isImage(item.path)) {
+      modal = Gallery
+    } else if (this.isText(item.path)) {
+      modal = Editor
+    } else if (this.isVideo(item.path)) {
+      modal = VideoPlayer
+    }
+    this.$modal.open({
+      parent: this,
+      props: { item: item },
+      hasModalCard: true,
+      component: modal,
+    })
+  },
     isArchive(item) {
       return item.type == 'file' && item.name.split('.').pop() == 'zip'
     },
