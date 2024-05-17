@@ -109,7 +109,7 @@ class UploadController
             return $response->json([
                 'message' => 'Chunk too big',
                 'file_name' => $file_name,
-                'destination' => $'destination' => $destination,
+                'destination' => $destination,
                 'chunk_number' => $chunk_number,
                 'total_chunks' => $total_chunks,
                 'total_size' => $total_size,
