@@ -35,6 +35,7 @@ const data = {
   'Delete': '删除',
   'Download': '下载',
   'Copy link': '复制链接',
+  'Copy link to QR code': '展示链接二维码',
   'Done': '完成',
   'File': '文件',
   'Drop files to upload': '拖放文件即可上传',

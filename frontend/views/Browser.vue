@@ -1,9 +1,6 @@
 <template>
-  <div id="dropzone" class="container"
-       @dragover="dropZone = can('upload') && ! isLoading ? true : false"
-       @dragleave="dropZone = false"
-       @drop="dropZone = false"
-  >
+  <div id="dropzone" class="container" @dragover="dropZone = can('upload') && ! isLoading ? true : false"
+    @dragleave="dropZone = false" @drop="dropZone = false">
     <div v-if="isLoading" id="loading" />
 
     <Upload v-if="can('upload')" v-show="dropZone == false" :files="files" :drop-zone="dropZone" />
@@ -11,6 +8,7 @@
     <b-upload v-if="dropZone && ! isLoading" multiple drag-drop>
       <b class="drop-info">{{ lang('Drop files to upload') }}</b>
     </b-upload>
+
 
     <div v-if="!dropZone" class="container">
       <Menu />
@@ -79,20 +77,11 @@
           </div>
         </section>
 
-        <b-table v-if="can('read')"
-                 :data="content"
-                 :default-sort="defaultSort"
-                 :paginated="perPage > 0"
-                 :per-page="perPage"
-                 :current-page.sync="currentPage"
-                 :hoverable="true"
-                 :is-row-checkable="(row) => row.type != 'back'"
-                 :row-class="(row) => 'file-row type-'+row.type"
-                 :checked-rows.sync="checked"
-                 :loading="isLoading"
-                 :checkable="can('batchdownload') || can('write') || can('zip')"
-                 @contextmenu="rightClick"
-        >
+        <b-table v-if="can('read')" :data="content" :default-sort="defaultSort" :paginated="perPage > 0"
+          :per-page="perPage" :current-page.sync="currentPage" :hoverable="true"
+          :is-row-checkable="(row) => row.type != 'back'" :row-class="(row) => 'file-row type-'+row.type"
+          :checked-rows.sync="checked" :loading="isLoading"
+          :checkable="can('batchdownload') || can('write') || can('zip')" @contextmenu="rightClick">
           <template slot-scope="props">
             <b-table-column :label="lang('Name')" :custom-sort="sortByName" field="data.name" sortable>
               <a class="is-block name" @click="itemClick(props.row)">
@@ -100,24 +89,29 @@
               </a>
             </b-table-column>
 
-            <b-table-column :label="lang('Size')" :custom-sort="sortBySize" field="data.size" sortable numeric width="150">
+            <b-table-column :label="lang('Size')" :custom-sort="sortBySize" field="data.size" sortable numeric
+              width="150">
               {{ props.row.type == 'back' || props.row.type == 'dir' ? lang('Folder') : formatBytes(props.row.size) }}
             </b-table-column>
 
-            <b-table-column :label="lang('Time')" :custom-sort="sortByTime" field="data.time" sortable numeric width="200">
+            <b-table-column :label="lang('Time')" :custom-sort="sortByTime" field="data.time" sortable numeric
+              width="200">
               {{ props.row.time ? formatDate(props.row.time) : '' }}
             </b-table-column>
 
             <b-table-column id="single-actions" width="51">
-              <b-dropdown v-if="props.row.type != 'back'" :disabled="checked.length > 0" aria-role="list" position="is-bottom-left">
+              <b-dropdown v-if="props.row.type != 'back'" :disabled="checked.length > 0" aria-role="list"
+                position="is-bottom-left">
                 <button :ref="'ref-single-action-button-'+props.row.path" slot="trigger" class="button is-small">
                   <b-icon icon="ellipsis-h" size="is-small" />
                 </button>
 
-                <b-dropdown-item v-if="props.row.type == 'file' && can('download')" aria-role="listitem" @click="download(props.row)">
+                <b-dropdown-item v-if="props.row.type == 'file' && can('download')" aria-role="listitem"
+                  @click="download(props.row)">
                   <b-icon icon="download" size="is-small" /> {{ lang('Download') }}
                 </b-dropdown-item>
-                <b-dropdown-item v-if="props.row.type == 'file' && can(['download']) && hasPreview(props.row.path)" aria-role="listitem" @click="preview(props.row)">
+                <b-dropdown-item v-if="props.row.type == 'file' && can(['download']) && hasPreview(props.row.path)"
+                  aria-role="listitem" @click="preview(props.row)">
                   <b-icon icon="file-alt" size="is-small" /> {{ lang('View') }}
                 </b-dropdown-item>
                 <b-dropdown-item v-if="can('write')" aria-role="listitem" @click="copy($event, props.row)">
@@ -129,20 +123,28 @@
                 <b-dropdown-item v-if="can('write')" aria-role="listitem" @click="rename($event, props.row)">
                   <b-icon icon="file-signature" size="is-small" /> {{ lang('Rename') }}
                 </b-dropdown-item>
-                <b-dropdown-item v-if="can(['write', 'zip']) && isArchive(props.row)" aria-role="listitem" @click="unzip($event, props.row)">
+                <b-dropdown-item v-if="can(['write', 'zip']) && isArchive(props.row)" aria-role="listitem"
+                  @click="unzip($event, props.row)">
                   <b-icon icon="file-archive" size="is-small" /> {{ lang('Unzip') }}
                 </b-dropdown-item>
-                <b-dropdown-item v-if="can(['write', 'zip']) && ! isArchive(props.row)" aria-role="listitem" @click="zip($event, props.row)">
+                <b-dropdown-item v-if="can(['write', 'zip']) && ! isArchive(props.row)" aria-role="listitem"
+                  @click="zip($event, props.row)">
                   <b-icon icon="file-archive" size="is-small" /> {{ lang('Zip') }}
                 </b-dropdown-item>
-                <b-dropdown-item v-if="can(['write', 'chmod']) && props.row.permissions !== -1" aria-role="listitem" @click="chmod($event, props.row)">
+                <b-dropdown-item v-if="can(['write', 'chmod']) && props.row.permissions !== -1" aria-role="listitem"
+                  @click="chmod($event, props.row)">
                   <b-icon icon="lock" size="is-small" /> {{ lang('Permissions') }} ({{ props.row.permissions }})
                 </b-dropdown-item>
                 <b-dropdown-item v-if="can('write')" aria-role="listitem" @click="remove($event, props.row)">
                   <b-icon icon="trash-alt" size="is-small" /> {{ lang('Delete') }}
                 </b-dropdown-item>
-                <b-dropdown-item v-if="props.row.type == 'file' && can('download')" v-clipboard:copy="getDownloadLink(props.row.path)" aria-role="listitem">
+                <b-dropdown-item v-if="props.row.type == 'file' && can('download')"
+                  v-clipboard:copy="getDownloadLink(props.row.path)" aria-role="listitem">
                   <b-icon icon="clipboard" size="is-small" /> {{ lang('Copy link') }}
+                </b-dropdown-item>
+                <b-dropdown-item v-if="props.row.type == 'file' && can('download')" @click="showQRCode(props.row)"
+                  aria-role="listitem">
+                  <b-icon icon="qrcode" size="is-small" /> {{ lang('Copy link to QR code') }}
                 </b-dropdown-item>
               </b-dropdown>
             </b-table-column>
@@ -160,11 +162,22 @@
         </section>
       </div>
     </div>
+      <!-- 添加QR码展示模态框 -->
+      <b-modal v-model="showQRModal" :width="400" scroll="keep">
+      <template #modal-header>
+        <p class="modal-card-title">{{ lang('QR Code') }}</p>
+        <button class="delete" @click="showQRModal = false"></button>
+      </template>
+      <section class="modal-card-body">
+        <qrcode-vue :value="qrCodeLink" :size="256"></qrcode-vue>
+      </section>
+    </b-modal>  
   </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import QRCodeVue from 'qrcode.vue'  // 导入 qrcode.vue
 import Menu from './partials/Menu'
 import Tree from './partials/Tree'
 import Permissions from './partials/Permissions'
@@ -194,6 +207,8 @@ export default {
       files: [],
       hasFilteredEntries: false,
       showAllEntries: false,
+      showQRModal: false,
+      qrCodeLink: ''
     }
   },
   computed: {
@@ -631,6 +646,10 @@ export default {
         if (_.isString(a[param])) return (a[param].localeCompare(b[param])) * (order ? -1 : 1)
         else return ((a[param] < b[param]) ? -1 : 1) * (order ? -1 : 1)
       }
+    },
+    showQRCode(item) {
+      this.qrCodeLink = this.getDownloadLink(item.path)
+      this.showQRModal = true
     },
   }
 }
