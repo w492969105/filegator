@@ -155,6 +155,8 @@
           <div>
             <span>{{ lang('Selected', checked.length, totalCount) }}</span>
           </div>
+
+
           <div v-if="(showAllEntries || hasFilteredEntries) ">
             <input type="checkbox" id="checkbox" @click="toggleHidden">
             <label for="checkbox"> {{ lang('Show hidden') }}</label>
@@ -195,7 +197,7 @@ Vue.use(VueClipboard)
 
 export default {
   name: 'Browser',
-  components: { Menu, Pagination, Upload ,QRCodeVue },
+  components: { Menu, Pagination, Upload },
   data() {
     return {
       dropZone: false,
