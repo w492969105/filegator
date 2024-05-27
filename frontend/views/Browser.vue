@@ -181,7 +181,7 @@
 <script>
 import Vue from 'vue'
 //import QRCodeVue from 'qrcode.vue'  // 导入 qrcode.vue
-import VueQr from 'vue-qr'
+//import VueQr from 'vue-qr'
 import Menu from './partials/Menu'
 import Tree from './partials/Tree'
 import Permissions from './partials/Permissions'
