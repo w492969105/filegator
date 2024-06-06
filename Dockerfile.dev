@@ -13,6 +13,8 @@ WORKDIR "/var/www/filegator/"
 
 COPY . .
 RUN composer install
+RUN npm install vue-qr --save
+
 RUN npm i
 RUN cp -n configuration_sample.php configuration.php
 

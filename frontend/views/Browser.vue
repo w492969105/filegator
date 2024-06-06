@@ -164,22 +164,23 @@
         </section>
       </div>
     </div>
-      <!-- 添加QR码展示模态框 -->
-      <b-modal v-model="showQRModal" :width="400" scroll="keep">
-      <template #modal-header>
-        <p class="modal-card-title">{{ lang('QR Code') }}</p>
-        <button class="delete" @click="showQRModal = false"></button>
-      </template>
-      <section class="modal-card-body">
-        <qrcode-vue :value="qrCodeLink" :size="256"></qrcode-vue>
-      </section>
-    </b-modal>  
-  </div>
+  <!-- 添加QR码展示模态框 -->
+  <b-modal v-model="showQRModal" :width="400" scroll="keep">
+    <template #modal-header>
+      <p class="modal-card-title">{{ lang('QR Code') }}</p>
+      <button class="delete" @click="showQRModal = false"></button>
+    </template>
+    <section class="modal-card-body">
+      <vue-qr :text="qrCodeLink" :callback="test" :size="256"></vue-qr>
+    </section>
+  </b-modal>  
+</div>
+
 </template>
 
 <script>
 import Vue from 'vue'
-import QRCodeVue from 'qrcode.vue'  // 导入 qrcode.vue
+import VueQr from 'vue-qr'
 import Menu from './partials/Menu'
 import Tree from './partials/Tree'
 import Permissions from './partials/Permissions'
@@ -197,7 +198,7 @@ Vue.use(VueClipboard)
 
 export default {
   name: 'Browser',
-  components: { Menu, Pagination, Upload },
+  components: { Menu, Pagination, Upload,VueQr },
   data() {
     return {
       dropZone: false,
@@ -653,6 +654,10 @@ export default {
       this.qrCodeLink = this.getDownloadLink(item.path)
       this.showQRModal = true
     },
+    test(qrData) {
+      // 这里的 qrData 是生成的二维码数据，可以用来做进一步处理
+      console.log('QR Data:', qrData)
+    }
   }
 }
 </script>

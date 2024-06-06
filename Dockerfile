@@ -19,8 +19,8 @@ RUN cp configuration_sample.php configuration.php
 RUN composer install
 RUN composer require league/flysystem-sftp:^1.0 -W
 RUN composer require league/flysystem-aws-s3-v3:^1.0 -W
-# 安装 qrcode.vue 依赖项
-RUN npm install qrcode.vue --save
+# 安装 vue-qr 依赖项
+RUN npm install vue-qr --save
 
 RUN npm install
 RUN npm run build
